@@ -14,6 +14,7 @@
 		9626187D1F568DC20031F7D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9626187B1F568DC20031F7D1 /* LaunchScreen.storyboard */; };
 		962618851F5692260031F7D1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 962618841F5692260031F7D1 /* art.scnassets */; };
 		9626188A1F569FAC0031F7D1 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962618891F569FAC0031F7D1 /* AlertView.swift */; };
+		9626188C1F5755BF0031F7D1 /* ARViewConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9626188B1F5755BF0031F7D1 /* ARViewConfigure.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		962618841F5692260031F7D1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		962618871F5698B70031F7D1 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		962618891F569FAC0031F7D1 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		9626188B1F5755BF0031F7D1 /* ARViewConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewConfigure.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				9626187E1F568DC20031F7D1 /* Info.plist */,
 				962618841F5692260031F7D1 /* art.scnassets */,
 				962618891F569FAC0031F7D1 /* AlertView.swift */,
+				9626188B1F5755BF0031F7D1 /* ARViewConfigure.swift */,
 			);
 			path = TryARKit;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				962618751F568DC20031F7D1 /* ViewController.swift in Sources */,
+				9626188C1F5755BF0031F7D1 /* ARViewConfigure.swift in Sources */,
 				962618731F568DC20031F7D1 /* AppDelegate.swift in Sources */,
 				9626188A1F569FAC0031F7D1 /* AlertView.swift in Sources */,
 			);

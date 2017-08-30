@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13165.3"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,12 +23,21 @@
                             </arscnView>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="58d-YU-KC2">
                                 <rect key="frame" x="16" y="166" width="51" height="31"/>
+                                <connections>
+                                    <action selector="detectPlanes:" destination="BYZ-38-t0r" eventType="valueChanged" id="TeA-6x-TLp"/>
+                                </connections>
                             </switch>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZXi-gw-wEC">
                                 <rect key="frame" x="16" y="125" width="51" height="31"/>
+                                <connections>
+                                    <action selector="showPlanes:" destination="BYZ-38-t0r" eventType="valueChanged" id="Nhy-Z5-wik"/>
+                                </connections>
                             </switch>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gpc-bB-YB0">
                                 <rect key="frame" x="16" y="84" width="51" height="31"/>
+                                <connections>
+                                    <action selector="showFeaturePoints:" destination="BYZ-38-t0r" eventType="valueChanged" id="30v-NE-Sx8"/>
+                                </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detect Planes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oku-6Y-c43">
                                 <rect key="frame" x="75" y="171" width="107" height="21"/>
@@ -48,13 +58,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <visualEffectView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8h-Rb-uXK" customClass="AlertView" customModule="TryARKit" customModuleProvider="target">
-                                <rect key="frame" x="119" y="84" width="240" height="100"/>
+                                <rect key="frame" x="246.5" y="84" width="112.5" height="100"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="6wz-Np-OdD">
-                                    <rect key="frame" x="0.0" y="0.0" width="240" height="100"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="112.5" height="100"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sqv-PZ-Ymx">
-                                            <rect key="frame" x="10" y="10" width="220" height="80"/>
+                                            <rect key="frame" x="10" y="10" width="92.5" height="80"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -69,12 +79,14 @@
                                 </view>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="EMa-YZ-6CB"/>
-                                    <constraint firstAttribute="width" constant="240" id="eyx-ZN-rTC"/>
                                 </constraints>
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xW3-8P-yDB">
                                 <rect key="frame" x="16" y="207" width="51" height="31"/>
+                                <connections>
+                                    <action selector="showStatistics:" destination="BYZ-38-t0r" eventType="valueChanged" id="qRG-wV-8Mi"/>
+                                </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show Statistics" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sal-cx-uZ9">
                                 <rect key="frame" x="75" y="212" width="118" height="21"/>
@@ -98,6 +110,7 @@
                             <constraint firstItem="B8h-Rb-uXK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="W2z-Ic-HKR"/>
                             <constraint firstItem="wj4-XV-uc4" firstAttribute="leading" secondItem="gpc-bB-YB0" secondAttribute="trailing" constant="10" id="XDl-i1-zee"/>
                             <constraint firstItem="Sal-cx-uZ9" firstAttribute="centerY" secondItem="xW3-8P-yDB" secondAttribute="centerY" id="Y2N-c7-bwC"/>
+                            <constraint firstItem="B8h-Rb-uXK" firstAttribute="width" secondItem="8zQ-Ce-k1E" secondAttribute="width" multiplier="0.3" id="ceS-Mw-cEZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="B8h-Rb-uXK" secondAttribute="trailing" constant="16" id="dXA-d3-eSB"/>
                             <constraint firstItem="Ujc-49-qCM" firstAttribute="centerY" secondItem="ZXi-gw-wEC" secondAttribute="centerY" id="eeq-tX-iM9"/>
                             <constraint firstItem="gpc-bB-YB0" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="fIG-gi-XGc"/>
