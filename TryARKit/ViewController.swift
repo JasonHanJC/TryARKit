@@ -8,11 +8,41 @@
 
 import UIKit
 import ARKit
+import Vision
 
 class ViewController: UIViewController {
 
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var alertView: AlertView!
+    
+    var lastPosition: SCNVector3?
+    
+//    let testNode: SCNNode = {
+//        let testModelScene = SCNScene(named: "art.scnassets/lolipop.dae")
+//        let node = (testModelScene?.rootNode.childNode(withName: "Lollipop_headusOBJexport", recursively: true)!)!
+//        //node.scale = SCNVector3(0.007, 0.005, 0.005)
+//
+//        node.position = SCNVector3(0, 0, 100)
+//        return node
+//    }()
+    
+    var highlightView: UIView = {
+        let view = UIView(frame: .zero)
+        view.layer.borderColor = UIColor.red.cgColor
+        view.layer.borderWidth = 4
+        view.backgroundColor = .clear
+        
+        return view
+    }()
+    
+    
+    var layers = [CALayer]()
+    let lolipops = [SCNNode]()
+    
+    let faceDetectQueue = DispatchQueue(label: "com.tryARKit.faceDetectQueue")
+    
+    // Timer for
+    var timer: Timer?
     
     var planeNodes = [UUID : SCNNode]()
     var nodesInScene = [SCNNode]()
@@ -40,29 +70,9 @@ class ViewController: UIViewController {
         
         setupScene()
         
-        // addTestModel()
-    }
-    
-    func addTestModel() {
+        setupFocusSquare()
         
-        let tableScene = SCNScene(named: "art.scnassets/wooden-desk-1/wooden-desk-1.dae")
-        
-        if let tableNode = tableScene?.rootNode.childNode(withName: "GX-037", recursively: true) {
-            
-            print(tableNode)
-            
-            // Set position
-            let position: SCNVector3 = SCNVector3Make(
-                0,
-                0,
-                -2
-            )
-            
-            tableNode.position = position
-            
-            sceneView.scene.rootNode.addChildNode(tableNode)
-        }
-        
+        // setupTimer()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -96,6 +106,18 @@ class ViewController: UIViewController {
         // Show Feature Points by default
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
         
+        sceneView.preferredFramesPerSecond = 60
+        sceneView.contentScaleFactor = 1.3
+        
+        sceneView.scene.lightingEnvironment.intensity = 25
+        
+        if let camera = sceneView.pointOfView?.camera {
+            camera.wantsHDR = true
+            camera.wantsExposureAdaptation = true
+            camera.exposureOffset = -1
+            camera.minimumExposure = -1
+        }
+        
         /**
          Determines whether the view will update the scene’s lighting.
          
@@ -103,6 +125,51 @@ class ViewController: UIViewController {
          light estimates the session provides. Defaults to YES.
          */
         sceneView.automaticallyUpdatesLighting = true
+        
+//        // Add single tap on the sceneView
+//        let singleTap = UITapGestureRecognizer(target: self, action: #selector(taped))
+//        sceneView.addGestureRecognizer(singleTap)
+        
+        
+//        sceneView.scene.rootNode.addChildNode(testNode)
+        
+    }
+    
+    private func setupTimer() {
+        
+        timer = Timer(timeInterval: 2.0, target: self, selector: #selector(addLolipop), userInfo: nil, repeats: true)
+        RunLoop.current.add(timer!, forMode: .commonModes)
+        
+    }
+    
+    
+    
+    @objc func addLolipop() {
+        faceDetectQueue.async {
+            if let currentFrame = self.sceneView.session.currentFrame {
+                self.detectFaceAt(frame: currentFrame)
+            }
+        }
+    }
+    
+    @objc func taped(recognizer: UITapGestureRecognizer) {
+        
+        print("taped")
+        highlightView.removeFromSuperview()
+        highlightView.frame.size = CGSize(width:120, height:120)
+        highlightView.center = recognizer.location(in: view)
+        view.addSubview(highlightView)
+        
+        // convert the rect for the initial observation
+        let originalRect = self.highlightView.frame
+        // var convertedRect = sceneView.scene.
+            //self.cameraLayer.metadataOutputRectConverted(fromLayerRect: originalRect)
+//        convertedRect.origin.y = 1 - convertedRect.origin.y
+//        
+//        // set the observation
+//        let newObservation = VNDetectedObjectObservation(boundingBox: convertedRect)
+//        self.lastObservation = newObservation
+        
         
     }
     
@@ -129,9 +196,9 @@ class ViewController: UIViewController {
     
     fileprivate func addTestModelAt(result: ARHitTestResult) {
         // Create a new scene
-        let tableScene = SCNScene(named: "art.scnassets/wooden-desk-1/wooden-desk-1.dae")
+        let testModelScene = SCNScene(named: "art.scnassets/dog/shibainu.dae")
         
-        if let tableNode = tableScene?.rootNode.childNode(withName: "GX-037", recursively: true) {
+        if let testModelNode = testModelScene?.rootNode.childNode(withName: "shibainu", recursively: true) {
         
             // Set position
             let position: SCNVector3 = SCNVector3Make(
@@ -142,11 +209,11 @@ class ViewController: UIViewController {
             
             print(position)
             
-            tableNode.position = position
+            testModelNode.position = position
             
-            nodesInScene.append(tableNode)
+            nodesInScene.append(testModelNode)
             
-            sceneView.scene.rootNode.addChildNode(tableNode)
+            sceneView.scene.rootNode.addChildNode(testModelNode)
         }
     }
     
@@ -174,6 +241,9 @@ class ViewController: UIViewController {
         arViewConfig.showPlanes = enabled
         
         if enabled {
+            
+            focusSquare.unhide()
+            
             for node in planeNodes.values {
                 
                 let normalMaterial = SCNMaterial()
@@ -182,6 +252,9 @@ class ViewController: UIViewController {
                 node.geometry?.materials = [normalMaterial]
             }
         } else {
+            
+            focusSquare.hide()
+            
             for node in planeNodes.values {
                 
                 let transparentMaterial = SCNMaterial()
@@ -222,10 +295,34 @@ class ViewController: UIViewController {
     @IBAction func showStatistics(_ sender: UISwitch) {
         let enabled = sender.isOn
         
-        arViewConfig.showStatistics = enabled
+        if enabled {
+            setupTimer()
+            timer?.fire()
+        } else {
+            timer?.invalidate()
+        }
+        // arViewConfig.showStatistics = enabled
         
-        self.sceneView.showsStatistics = enabled;
+        // self.sceneView.showsStatistics = enabled;
     }
+    
+    // MARK: - Focus Square
+    
+    var focusSquare = FocusSquare()
+    
+    func setupFocusSquare() {
+        focusSquare.unhide()
+        focusSquare.removeFromParentNode()
+        sceneView.scene.rootNode.addChildNode(focusSquare)
+    }
+    
+    func updateFocusSquare() {
+        let (worldPosition, planeAnchor, _) = worldPositionFromScreenPosition(view.center, objectPos: focusSquare.position)
+        if let worldPosition = worldPosition {
+            focusSquare.update(for: worldPosition, planeAnchor: planeAnchor, camera: sceneView.session.currentFrame?.camera)
+        }
+    }
+
     
 }
 
@@ -237,16 +334,19 @@ extension ViewController: ARSCNViewDelegate {
         let trackingState = camera.trackingState
         
         switch trackingState {
-        case .limited(.initializing):
-            showMessage("ARCamera is initializing")
-        case .limited(.insufficientFeatures):
-            showMessage("Limited tracking: too few feature points, view areas with more textures")
-        case .limited(.excessiveMotion):
-            showMessage("Limited tracking: slow down the movement of the device")
+        case .limited(let reason):
+            switch reason {
+            case .excessiveMotion:
+                showMessage("Limited tracking: slow down the movement of the device")
+            case .insufficientFeatures:
+                showMessage("Limited tracking: too few feature points, view areas with more textures")
+            case .initializing:
+                showMessage("AR Tracking is initializing")
+            }
         case .notAvailable:
-            showMessage("Camera tracking is not available on this device")
+            showMessage("AR tracking is not available on this device")
         case .normal:
-            showMessage("ARCamera tracking is normal")
+            showMessage("AR tracking is normal")
         }
     }
     
@@ -276,7 +376,6 @@ extension ViewController: ARSCNViewDelegate {
     
     func sessionInterruptionEnded(_ session: ARSession) {
         alertView.addMessage("Tracking session has been reset due to interruption")
-        
         resetTrackingSession()
     }
     
@@ -358,6 +457,24 @@ extension ViewController: ARSCNViewDelegate {
         }
     }
     
+    /*!
+     @method renderer:updateAtTime:
+     @abstract Implement this to perform per-frame game logic. Called exactly once per frame before any animation and actions are evaluated and any physics are simulated.
+     @param renderer The renderer that will render the scene.
+     @param time The time at which to update the scene.
+     @discussion All modifications done within this method don't go through the transaction model, they are directly applied on the presentation tree.
+     */
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        
+        
+        DispatchQueue.main.async {
+            self.updateFocusSquare()
+        }
+    }
+    
+    
+    
+    
     /**
      Called when a node has been updated with data from the given anchor.
      
@@ -387,5 +504,79 @@ extension ViewController: ARSCNViewDelegate {
     }
 }
 
-
+extension ViewController {
+    
+    // Code from Apple PlacingObjects demo: https://developer.apple.com/sample-code/wwdc/2017/PlacingObjects.zip
+    
+    func worldPositionFromScreenPosition(_ position: CGPoint,
+                                         objectPos: SCNVector3?,
+                                         infinitePlane: Bool = false) -> (position: SCNVector3?, planeAnchor: ARPlaneAnchor?, hitAPlane: Bool) {
+        
+        // -------------------------------------------------------------------------------
+        // 1. Always do a hit test against exisiting plane anchors first.
+        //    (If any such anchors exist & only within their extents.)
+        
+        let planeHitTestResults = sceneView.hitTest(position, types: .existingPlaneUsingExtent)
+        if let result = planeHitTestResults.first {
+            
+            let planeHitTestPosition = SCNVector3.positionFromTransform(result.worldTransform)
+            let planeAnchor = result.anchor
+            
+            // Return immediately - this is the best possible outcome.
+            return (planeHitTestPosition, planeAnchor as? ARPlaneAnchor, true)
+        }
+        
+        // -------------------------------------------------------------------------------
+        // 2. Collect more information about the environment by hit testing against
+        //    the feature point cloud, but do not return the result yet.
+        
+        var featureHitTestPosition: SCNVector3?
+        var highQualityFeatureHitTestResult = false
+        
+        let highQualityfeatureHitTestResults = sceneView.hitTestWithFeatures(position, coneOpeningAngleInDegrees: 18, minDistance: 0.2, maxDistance: 2.0)
+        
+        if !highQualityfeatureHitTestResults.isEmpty {
+            let result = highQualityfeatureHitTestResults[0]
+            featureHitTestPosition = result.position
+            highQualityFeatureHitTestResult = true
+        }
+        
+        // -------------------------------------------------------------------------------
+        // 3. If desired or necessary (no good feature hit test result): Hit test
+        //    against an infinite, horizontal plane (ignoring the real world).
+        
+        let dragOnInfinitePlanesEnabled = false
+        
+        if (infinitePlane && dragOnInfinitePlanesEnabled) || !highQualityFeatureHitTestResult {
+            
+            let pointOnPlane = objectPos ?? SCNVector3Zero
+            
+            let pointOnInfinitePlane = sceneView.hitTestWithInfiniteHorizontalPlane(position, pointOnPlane)
+            if pointOnInfinitePlane != nil {
+                return (pointOnInfinitePlane, nil, true)
+            }
+        }
+        
+        // -------------------------------------------------------------------------------
+        // 4. If available, return the result of the hit test against high quality
+        //    features if the hit tests against infinite planes were skipped or no
+        //    infinite plane was hit.
+        
+        if highQualityFeatureHitTestResult {
+            return (featureHitTestPosition, nil, false)
+        }
+        
+        // -------------------------------------------------------------------------------
+        // 5. As a last resort, perform a second, unfiltered hit test against features.
+        //    If there are no features in the scene, the result returned here will be nil.
+        
+        let unfilteredFeatureHitTestResults = sceneView.hitTestWithFeatures(position)
+        if !unfilteredFeatureHitTestResults.isEmpty {
+            let result = unfilteredFeatureHitTestResults[0]
+            return (result.position, nil, false)
+        }
+        
+        return (nil, nil, false)
+    }
+}
 

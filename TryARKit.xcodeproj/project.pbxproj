@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		960E35EA1F57879700D5BAC2 /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960E35E91F57879600D5BAC2 /* FocusSquare.swift */; };
+		960E35EC1F5787AA00D5BAC2 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960E35EB1F5787AA00D5BAC2 /* Utilities.swift */; };
 		962618731F568DC20031F7D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962618721F568DC20031F7D1 /* AppDelegate.swift */; };
 		962618751F568DC20031F7D1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962618741F568DC20031F7D1 /* ViewController.swift */; };
 		962618781F568DC20031F7D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 962618761F568DC20031F7D1 /* Main.storyboard */; };
@@ -15,9 +17,12 @@
 		962618851F5692260031F7D1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 962618841F5692260031F7D1 /* art.scnassets */; };
 		9626188A1F569FAC0031F7D1 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962618891F569FAC0031F7D1 /* AlertView.swift */; };
 		9626188C1F5755BF0031F7D1 /* ARViewConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9626188B1F5755BF0031F7D1 /* ARViewConfigure.swift */; };
+		963BA30F1F58952700E188D8 /* ViewController+FaceDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963BA30E1F58952700E188D8 /* ViewController+FaceDetection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		960E35E91F57879600D5BAC2 /* FocusSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
+		960E35EB1F5787AA00D5BAC2 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		9626186F1F568DC20031F7D1 /* TryARKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TryARKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		962618721F568DC20031F7D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		962618741F568DC20031F7D1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -26,9 +31,9 @@
 		9626187C1F568DC20031F7D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9626187E1F568DC20031F7D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		962618841F5692260031F7D1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
-		962618871F5698B70031F7D1 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		962618891F569FAC0031F7D1 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		9626188B1F5755BF0031F7D1 /* ARViewConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewConfigure.swift; sourceTree = "<group>"; };
+		963BA30E1F58952700E188D8 /* ViewController+FaceDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+FaceDetection.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +52,6 @@
 			children = (
 				962618711F568DC20031F7D1 /* TryARKit */,
 				962618701F568DC20031F7D1 /* Products */,
-				962618861F5698B60031F7D1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +68,9 @@
 			children = (
 				962618721F568DC20031F7D1 /* AppDelegate.swift */,
 				962618741F568DC20031F7D1 /* ViewController.swift */,
+				963BA30E1F58952700E188D8 /* ViewController+FaceDetection.swift */,
+				960E35EB1F5787AA00D5BAC2 /* Utilities.swift */,
+				960E35E91F57879600D5BAC2 /* FocusSquare.swift */,
 				962618761F568DC20031F7D1 /* Main.storyboard */,
 				962618791F568DC20031F7D1 /* Assets.xcassets */,
 				9626187B1F568DC20031F7D1 /* LaunchScreen.storyboard */,
@@ -73,14 +80,6 @@
 				9626188B1F5755BF0031F7D1 /* ARViewConfigure.swift */,
 			);
 			path = TryARKit;
-			sourceTree = "<group>";
-		};
-		962618861F5698B60031F7D1 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				962618871F5698B70031F7D1 /* ARKit.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,10 +155,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				960E35EC1F5787AA00D5BAC2 /* Utilities.swift in Sources */,
+				963BA30F1F58952700E188D8 /* ViewController+FaceDetection.swift in Sources */,
 				962618751F568DC20031F7D1 /* ViewController.swift in Sources */,
 				9626188C1F5755BF0031F7D1 /* ARViewConfigure.swift in Sources */,
 				962618731F568DC20031F7D1 /* AppDelegate.swift in Sources */,
 				9626188A1F569FAC0031F7D1 /* AlertView.swift in Sources */,
+				960E35EA1F57879700D5BAC2 /* FocusSquare.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
